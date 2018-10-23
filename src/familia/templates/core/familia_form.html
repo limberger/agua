@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+{% block menu %}<li><a href="admin">Admin</a></li>{% endblock %}
+
+{% block content %}
+<h1>Criar</h1>
+{% if obs %}
+<div class="alert alert-warning">
+   {{ obs }}
+</div>
+{% endif %}
+<form method="post">{% csrf_token %}
+  {{ form.as_p }}
+  <input type="submit" value="Submit"/>
+
+{% for message in messages %}
+  <div class="alert alert-success">
+    <a class="close" href="#" data-dismiss="alert">×</a>
+       {{ message }}
+   </div>
+ {% endfor %}
+
+{% if form.errors %}
+   {% for erro in form.errors %}
+    <div class="alert alert-error"0>
+          {{ erro }}
+    </div>
+   {% endfor%}
+{% endif %}
+
+{% endblock %}
