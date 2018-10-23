@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if user.is_authenticated %}
+<h2>Links - {{ user.username }}</h2>
+<ul>
+  <li><a href="core">Cadastro</a></li>
+  <li><a href="admin">Admin</a></li>
+</ul>
+{% else %}
+<h2>Login</h2>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Login</button>
+</form>
+<br>
+<!-- <p><strong>-- OU --</strong></p>
+<a href="{% url 'social:begin' 'facebook' %}?next={{ request.path }}">Entrar com Facebook</a>
+<br/> -->
+<p><strong>-- OU --</strong></p>
+<a href="{% url 'signup' %}">Cadastrar um usuário</a>
+
+
+{% endif %}
+{% endblock %}
