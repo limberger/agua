@@ -75,7 +75,7 @@ class Despesa(models.Model):
     tipo_despesa = models.ForeignKey(TipoDespesa, on_delete=models.CASCADE)
     data_despesa = models.DateField()
     competencia = models.DateField()
-    descricao = models.Charfield(max_length=200)
+    descricao = models.CharField(max_length=200)
     valor = models.DecimalField(max_digits=18, decimal_places=2)
 
     def __str__(self):
