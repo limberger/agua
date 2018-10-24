@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block menu %}<li><a href="/admin">Admin</a></li>{% endblock %}
+
+{% block content %}
+<h1>Agua</h1>
+<table border="1">
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Nome Completo</th>
+      <th>Telefone</th>
+      <th>Ver</th>
+      <th>Alterar</th>
+      <th>Deletar</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for agua in object_list %}
+    <tr>
+      <td>{{ agua.nome_conhecido }}</td>
+      <td>{{ agua.nome_completo }}</td>
+      <td>{{ agua.telefone }}</td>
+      <td><a href="/agua/view/{{ agua.id }}"><span class="glyphicon glyphicon-eye-open"/> Ver</span> </a></td>
+      <td><a href="/agua/edit/{{ agua.id }"><span class="glyphicon glyphicon-pencil"/> Alterar</span> </a></td>
+      <td><a href="/agua/delete/{{ agua.id }}"><span class="glyphicon glyphicon-trash"/> Deletar</span> </a></td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="/agua/new">Cadastrar Nova Parente</a>
+{% endblock %}

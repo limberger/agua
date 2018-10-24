@@ -95,11 +95,11 @@ class AguaForm(ModelForm):
 """
     # def __init__(self, *args, **kwargs):
     #    self.request = kwargs.pop('request', None)
-    #    return super(FamiliaForm, self).__init__(*args, **kwargs)
+    #    return super(AguaForm, self).__init__(*args, **kwargs)
 
     # def save(self, *args, **kwargs):
     #     kwargs['commit']=False
-    #     obj = super(FamiliaForm, self).save(*args, **kwargs)
+    #     obj = super(AguaForm, self).save(*args, **kwargs)
     #     if self.request:
     #         obj.usuario_responsavel = self.request.user
     #     obj.save()
@@ -112,7 +112,7 @@ class AguaForm(ModelForm):
     #
     # def save(self, *args, **kwargs):
     #     kwargs['commit'] = False
-    #     obj = super(Familia_Form.self).save(*args,**kwargs)
+    #     obj = super(Agua_Form.self).save(*args,**kwargs)
     #     if self.request:
     #         obj.usuario_responsaavel = self.request.user
     #     obj.save()
@@ -188,10 +188,10 @@ def password(request):
 def agua_list(request, template_name='agua/agua_list.html'):
     logger = logging.getLogger('testlogger')
     logger.info('agua_list')
-    responsavel = Familia.objects.filter(usuario_responsavel=request.user.id,
+    responsavel = Agua.objects.filter(usuario_responsavel=request.user.id,
                             parentesco = 'Responsável')
     if not responsavel:
-        form = FamiliaForm(request.POST or None)
+        form = AguaForm(request.POST or None)
         request.session['parentesco'] = 'Responsável'
         request.session['obs']  = 'Cadastre inicialmente o responsável pela família (o usuário que se cadastrou).'
         return redirect('/agua/new')
@@ -210,7 +210,7 @@ def agua_view(request, pk , template_name='agua/agua_detail.html'):
 def agua_create(request, template_name='agua/agua_form.html'):
     logger = logging.getLogger('testlogger')
     logger.info('agua_create')
-    form = FamiliaForm(request.POST or None)
+    form = AguaForm(request.POST or None)
     obs=''
     if request.session['obs']:
         obs = request.session['obs']
@@ -218,7 +218,7 @@ def agua_create(request, template_name='agua/agua_form.html'):
     if request.session['parentesco']:
         logger.info('setting parentesco')
         logger.info(request.session['parentesco'])
-        form = FamiliaForm(initial={'parentesco': request.session['parentesco'] })
+        form = AguaForm(initial={'parentesco': request.session['parentesco'] })
         request.session['parentesco'] = None
     if form.is_valid():
         form0 = form.save(commit=False)
@@ -229,8 +229,8 @@ def agua_create(request, template_name='agua/agua_form.html'):
 
 @login_required
 def agua_update(request, pk , template_name='agua/agua_form.html'):
-    agua = get_object_or_404(Familia, pk=pk)
-    form = FamiliaForm(request.POST or None, instance=agua)
+    agua = get_object_or_404(Agua, pk=pk)
+    form = AguaForm(request.POST or None, instance=agua)
     if form.is_valid():
         form.save()
         return redirect('/agua/')

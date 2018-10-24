@@ -1,5 +1,5 @@
 """
-WSGI config for familia project.
+WSGI config for agua project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
