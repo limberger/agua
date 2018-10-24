@@ -13,7 +13,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.forms import ModelForm, DateInput, Textarea , TextInput
 
-from agua.models import Agua
+from agua.models import Condominio, Condomino, CondominoDoCondominio, Hidrometro, Medicao, TipoDespesa, Despesa
 from django.utils.translation import ugettext_lazy as _
 
 from social_django.models import UserSocialAuth
