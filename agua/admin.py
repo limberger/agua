@@ -1,6 +1,6 @@
 from django.contrib import admin
-from core.models import Familia
+from agua.models import Agua
 
 # Register your models here.
 
-admin.site.register(Familia)
+admin.site.register(Agua)

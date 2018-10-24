@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 from django.conf import settings
 
 # Create your models here.
-class Familia(models.Model):
+class Agua(models.Model):
     PARENTESCO_CHOICES = (
     ('Filha', 'Filho/Filha'),
     ('Enteada', 'Enteado/Enteada'),
@@ -78,11 +78,11 @@ class Familia(models.Model):
         return self.nome_conhecido + " [" + self.nome_completo + "]"
 
     def get_absolute_url(self):
-        return reverse('familia_edit',kwargs={'pk': self.pk})
+        return reverse('agua_edit',kwargs={'pk': self.pk})
 
     def save(self, *args, **kwargs):
         if not self.id:
-            super(Familia, self).save(*args,**kwargs)
+            super(Agua, self).save(*args,**kwargs)
 
     # def save_model(self, request, instance, form, change):
     #     user = request.user

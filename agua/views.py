@@ -13,7 +13,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.forms import ModelForm, DateInput, Textarea , TextInput
 
-from core.models import Familia
+from agua.models import Agua
 from django.utils.translation import ugettext_lazy as _
 
 from social_django.models import UserSocialAuth
@@ -30,9 +30,9 @@ class EmailInput(TextInput):
     input_type = 'email'
 
 
-class FamiliaForm(ModelForm):
+class AguaForm(ModelForm):
     class Meta:
-        model = Familia
+        model = Agua
         fields = ['usuario_responsavel' ,
                   'nome_conhecido' ,
                   'nome_completo' ,
@@ -118,7 +118,7 @@ class FamiliaForm(ModelForm):
     #     obj.save()
 @login_required
 def home(request):
-    return render(request, 'core/home.html')
+    return render(request, 'agua/home.html')
 
 def signup(request):
     if request.method == 'POST':
@@ -181,35 +181,35 @@ def password(request):
             messages.error(request, 'Please correct the error below.')
     else:
         form = PasswordForm(request.user)
-    return render(request, 'core/password.html', {'form': form})
+    return render(request, 'agua/password.html', {'form': form})
 
 
 @login_required
-def familia_list(request, template_name='core/familia_list.html'):
+def agua_list(request, template_name='agua/agua_list.html'):
     logger = logging.getLogger('testlogger')
-    logger.info('familia_list')
+    logger.info('agua_list')
     responsavel = Familia.objects.filter(usuario_responsavel=request.user.id,
                             parentesco = 'Responsável')
     if not responsavel:
         form = FamiliaForm(request.POST or None)
         request.session['parentesco'] = 'Responsável'
         request.session['obs']  = 'Cadastre inicialmente o responsável pela família (o usuário que se cadastrou).'
-        return redirect('/core/new')
+        return redirect('/agua/new')
 
-    familia = Familia.objects.filter(usuario_responsavel=request.user.id)
+    agua = Agua.objects.filter(usuario_responsavel=request.user.id)
     data = {}
-    data['object_list'] = familia
+    data['object_list'] = agua
     return render(request, template_name, data)
 
 @login_required
-def familia_view(request, pk , template_name='core/familia_detail.html'):
-    familia = get_object_or_404(Familia, pk=pk)
-    return render(request, template_name, {'object':familia})
+def agua_view(request, pk , template_name='agua/agua_detail.html'):
+    agua = get_object_or_404(Agua, pk=pk)
+    return render(request, template_name, {'object':agua})
 
 @login_required
-def familia_create(request, template_name='core/familia_form.html'):
+def agua_create(request, template_name='agua/agua_form.html'):
     logger = logging.getLogger('testlogger')
-    logger.info('familia_create')
+    logger.info('agua_create')
     form = FamiliaForm(request.POST or None)
     obs=''
     if request.session['obs']:
@@ -224,22 +224,22 @@ def familia_create(request, template_name='core/familia_form.html'):
         form0 = form.save(commit=False)
         form0.usuario_responsavel = request.user
         form0.save()
-        return redirect('/core/')
+        return redirect('/agua/')
     return render(request, template_name, {'form':form , 'obs':obs})
 
 @login_required
-def familia_update(request, pk , template_name='core/familia_form.html'):
-    familia = get_object_or_404(Familia, pk=pk)
-    form = FamiliaForm(request.POST or None, instance=familia)
+def agua_update(request, pk , template_name='agua/agua_form.html'):
+    agua = get_object_or_404(Familia, pk=pk)
+    form = FamiliaForm(request.POST or None, instance=agua)
     if form.is_valid():
         form.save()
-        return redirect('/core/')
+        return redirect('/agua/')
     return render(request, template_name, {'form':form})
 
 @login_required
-def familia_delete(request, pk , template_name='core/familia_confirm_delete.html'):
-    familia = get_object_or_404(Familia, pk=pk)
+def agua_delete(request, pk , template_name='agua/agua_confirm_delete.html'):
+    agua = get_object_or_404(Agua, pk=pk)
     if request.method=='POST':
-        familia.delete()
-        return redirect('/core/')
-    return render(request, template_name, {'object':familia})
+        agua.delete()
+        return redirect('/agua/')
+    return render(request, template_name, {'object':agua})
