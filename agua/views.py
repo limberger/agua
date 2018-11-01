@@ -30,7 +30,7 @@ class EmailInput(TextInput):
     input_type = 'email'
 
 
-class AguaForm(ModelForm):
+class MedicaoForm(ModelForm):
     class Meta:
         model = Agua
         fields = ['usuario_responsavel' ,
