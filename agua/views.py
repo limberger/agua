@@ -32,32 +32,21 @@ class EmailInput(TextInput):
 
 class MedicaoForm(ModelForm):
     class Meta:
-        model = Agua
-        fields = ['usuario_responsavel' ,
-                  'nome_conhecido' ,
-                  'nome_completo' ,
-                  'vira_para_o_encontro' ,
-                  'telefone' ,
-                  'parentesco' ,
-                  'email' ,
-                  'data_nascimento' ,
-                  'endereco_correspondencia' ,
-                  'cep_correspondencia' ,
-                  'cidade_correspondencia' ,
-                  'estado_correspondencia',
-                  'comentario']
+        model = Medicao
+        fields = ['hidrometro' ,
+                  'data_medicao' ,
+                  'competencia' ,
+                  'medicao' ]
         help_texts = {
             'nome_conhecido': _('Informe o nome ou apelido pelo qual é conhecido'),
             'vira_para_o_encontro': _('Informe se virá para o encontro'),
 
         }
         labels = {
-            'nome_conhecido': _('Nome/Apelido'),
-            'nome_completo': _('Nome Completo'),
-            'endereco_correspondencia': _('Endereço'),
-            'cidade_correspondencia': _('Cidade'),
-            'estado_correspondencia': _('Estado'),
-            'cep_correspondencia': _('CEP'),
+            'hidrometro': _('Hidrometro'),
+            'ndata_medicao': _('Data da medicao'),
+            'competencia': _('Competencia'),
+            'medicao': _('Medicao'),
 
         }
         error_messages = {
