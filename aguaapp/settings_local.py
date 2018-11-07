@@ -1,4 +1,4 @@
 try:
-    from agua.settings import *
+    from aguaapp.settings import *
 except ImportError as e:
     pass
