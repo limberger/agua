@@ -6,6 +6,9 @@ admin.site.register(Condominio)
 admin.site.register(Condomino)
 admin.site.register(CondominoDoCondominio)
 admin.site.register(Hidrometro)
-admin.site.register(Medicao)
 admin.site.register(TipoDespesa)
 admin.site.register(Despesa)
+
+@admin.register(Medicao)
+class MedicaoAdmin(admin.ModelAdmin):
+    pass

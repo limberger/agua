@@ -35,16 +35,11 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', True)
 
-#DATABASES = {
-#    'default': os.environ.get('DATABASE_URL','postgres://usuario@localhost/limberger')
-#}
 DATABASES = {}
-DATABASES['default'] = dj_database_url.parse(os.environ.get('DATABASE_URL','postgres://usuario:senha@localhost/limberger'),conn_max_age=600, ssl_require=True)
+DATABASES['default'] = dj_database_url.parse(os.environ.get('DATABASE_URL','postgres://usuario:senha@localhost/aguaapp'),conn_max_age=600, ssl_require=True)
 
 
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['*'] #['0.0.0.0', 'localhost', 'limberger.herokuapp.com']
-
-#['*']
+ALLOWED_HOSTS = ALLOWED_HOSTS = ['*']
 
 
 # Application definition
