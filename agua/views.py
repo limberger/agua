@@ -117,7 +117,7 @@ def home(request,template_name='agua/home.html'):
         # Admin, pode tudo
         condominos  = Condomino.objects.all()
     else:
-        if request.user.groups.filter(name=settings.MANAGER_GROUP_NAME).count():
+        if request.user.groups.filter(name='gerente').count():
             # Gerente - Todos do condominio
             if condomino:
                 condominos = Condomino.objects.filter(condominio=condomino.condominio)
