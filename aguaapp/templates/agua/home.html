@@ -1,12 +1,39 @@
 {% extends 'base.html' %}
 
-{% block menu %}<!-- <li><a href="admin">Admin</a></li> -->{% endblock %}
 
 {% block content %}
   <h2>Usuario Responsável - {{ user.username }}</h2>
   <ul>
-    <li><a href="core">Cadastro da Família</a></li>
+    <li><a href="core">Demonstrativo</a></li>
   </ul>
+  <h2>Unidades</h2>
+  {% for l in listaHidrometros %}
+    <h3>{{ l.0.condominio.nome }}</h3>
+    <h4>{{ l.0.condomino.nome_conhecido }}</h4>
+    {% if  l.1 %}
+      <h5>Hidrômetros</h5>
+      <table border="1">
+        <thead>
+          <tr>
+            <th>Identificação</th>
+            <th>Data da última Medição</th>
+            <th>Data da competëncia</th>
+            <th>Valor</th>
+            <th>Ação</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for h in l.1 %}
+            <td>{{ h.identificacao }}</td>
+            <td>{{ h.ultima_medicao.data_medicao|date:"d/m/Y" }}</td>
+            <td>{{ h.ultima_medicao.competencia|date:"m/Y" }}</td>
+            <td>{{ h.ultima_medicao.medicao }}</td>
+            <td><a href="/agua/view/{{ h.id }}"><span class="glyphicon glyphicon-scale"/> Informar consumo</a></td>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% endif %}
+  {% endfor %}
   <br/>
   <br/>
 {% endblock %}

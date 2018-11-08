@@ -33,8 +33,18 @@
                 <h1 class="title">{% block title %}Controle de Consumo de Água{% endblock %}</h1>
                 <nav>
                     <ul>
-                        {% block menu %}<!-- <li><a href="#">a</a></li> -->{% endblock %}
-                    </ul>
+                        {% block menuprincipal %}
+                        {% if user.is_authenticated %}
+                          {% if user.is_superuser  %}
+                            <li><a href="/admin">Admin</a></li>
+                          {% endif %}
+                          <li><a href="{% url 'logout' %}">Logout</a></li>
+                        {% else %}
+                        <li><a href="{% url 'home' %}">Login</a></li>
+                        {% endif %}
+
+                        {% endblock %}
+                     </ul>
                 </nav>
             </header>
         </div>

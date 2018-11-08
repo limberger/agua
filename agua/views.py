@@ -19,6 +19,7 @@ from django.utils.translation import ugettext_lazy as _
 from social_django.models import UserSocialAuth
 
 import logging
+import json
 
 class DateInput(DateInput):
     input_type = 'date'
@@ -35,7 +36,7 @@ class MedicaoForm(ModelForm):
         model = Medicao
         fields = ['hidrometro' ,
                   'data_medicao' ,
-                  'competencia' ,
+                  'cmpt' ,
                   'medicao' ]
         help_texts = {
             'nome_conhecido': _('Informe o nome ou apelido pelo qual é conhecido'),
@@ -107,7 +108,19 @@ class MedicaoForm(ModelForm):
     #     obj.save()
 @login_required
 def home(request):
-    return render(request, 'agua/home.html')
+
+    condominos = Condomino.objects.filter(usuario=request.user.id)
+    condominosDoCondominio = set()
+
+    for condomino in condominos:
+        condominosDoCondominio.add(CondominoDoCondominio.objects.get(pk=condomino.id))
+
+    listaHidrometros=[]
+    for c in condominosDoCondominio:
+        hidrometros = Hidrometro.objects.filter(condominoDoCondominio=c.id)
+        listaHidrometros.append([c,hidrometros])
+
+    return render(request, 'agua/home.html' , {'listaHidrometros':listaHidrometros})
 
 def signup(request):
     if request.method == 'POST':
