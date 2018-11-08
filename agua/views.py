@@ -13,7 +13,7 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.forms import ModelForm, DateInput, Textarea , TextInput
 
-from agua.models import Condominio, Condomino, CondominoDoCondominio, Hidrometro, Medicao, TipoDespesa, Despesa
+from agua.models import Condominio, Condomino, Hidrometro, Medicao, TipoDespesa, Despesa,Competencia
 from django.utils.translation import ugettext_lazy as _
 
 from social_django.models import UserSocialAuth
@@ -107,20 +107,70 @@ class MedicaoForm(ModelForm):
     #         obj.usuario_responsaavel = self.request.user
     #     obj.save()
 @login_required
-def home(request):
+def home(request,template_name='agua/home.html'):
 
-    condominos = Condomino.objects.filter(usuario=request.user.id)
-    condominosDoCondominio = set()
+    condomino = Condomino.objects.filter(usuario=request.user.id)
+    listaHidrometros=[]
+    condominos = []
+
+    if request.user.is_superuser:
+        # Admin, pode tudo
+        condominos  = Condomino.objects.all()
+    else:
+        if request.user.groups.filter(name=settings.MANAGER_GROUP_NAME).count():
+            # Gerente - Todos do condominio
+            if condomino:
+                condominos = Condomino.objects.filter(condominio=condomino.condominio)
+        else:
+            # Não é gerente - Pega somente o seu.
+            condominos = Condomino.objects.filter(pk=condomino.id)
+
+
 
     for condomino in condominos:
-        condominosDoCondominio.add(CondominoDoCondominio.objects.get(pk=condomino.id))
+        hidrometros = Hidrometro.objects.filter(condomino=condomino.id)
+        listaHidrometros.append([condomino,hidrometros])
 
-    listaHidrometros=[]
-    for c in condominosDoCondominio:
-        hidrometros = Hidrometro.objects.filter(condominoDoCondominio=c.id)
-        listaHidrometros.append([c,hidrometros])
+    return render(request, template_name , {'listaHidrometros':listaHidrometros})
 
-    return render(request, 'agua/home.html' , {'listaHidrometros':listaHidrometros})
+@login_required
+def demonstrativo(request, competencia=None , template_name='agua/demonstrativo.html'):
+
+    condominio = 1
+    cpt = None
+    if competencia != None:
+        comp=str(competencia).zfill(6)
+        ano = int(comp[-4:])
+        mes = int(comp[:2])
+        cpt = Competencia.objects.filter(condominio__id = 1 ,
+                                         competencia__year = ano ,
+                                         competencia__month = mes)[0]
+
+    if cpt == None:
+        cpt = Competencia.objects.latest()
+
+
+    despesas = Despesa.objects.filter(condominio__id=condominio , cmpt__id=cpt.id)
+    valor_total_despesa = 0
+    for despesa in despesas:
+        valor_total_despesa += despesa.valor
+
+    consumos = Medicao.objects.filter(hidrometro__condomino__condominio__id=condominio , cmpt__id=cpt.id)
+    total_consumo = 0
+    consumos_data = []
+    for consumo in consumos:
+        total_consumo += consumo.consumo
+        consumos_data.append([consumo,0,0])
+
+    for consumo in consumos_data:
+        consumo[1] =  (  consumo[0].consumo / total_consumo * 100 )
+        consumo[2] = consumo[1] / 100 * valor_total_despesa
+
+    return render(request,template_name,{   'competencia':cpt,
+                                            'despesas':despesas ,
+                                            'valor_total_despesa': valor_total_despesa ,
+                                            'consumos':consumos_data ,
+                                            'total_consumo': total_consumo})
 
 def signup(request):
     if request.method == 'POST':

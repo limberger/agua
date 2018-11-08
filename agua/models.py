@@ -20,20 +20,6 @@ class YearMonthField(forms.DateField):
         value = super(YearMonthField, self).to_python(value)
         return datetime.date(value.year, value.month, 1)
 
-class Competencia(models.Model):
-    ABERTO='AB'
-    FECHADO='FC'
-    COMPETENCIA_STATUS_CHOICES = (
-        ( ABERTO , _('Open')),
-        ( FECHADO, _('Closed')),
-    )
-    competencia = models.DateField()   # 01/Mes/Ano da Competencia
-    data_fechamento = models.DateField(null=True,blank=True)  # Data do fechamento da Competencia
-    situacao = models.CharField(max_length=2,choices=COMPETENCIA_STATUS_CHOICES,default=ABERTO)
-
-    def __str__(self):
-        return str(self.competencia.strftime('%m/%Y'))
-
 class Condominio(models.Model):
     nome = models.CharField(max_length=100)
 
@@ -43,10 +29,43 @@ class Condominio(models.Model):
     def get_absolute_url(self):
         return reverse('condominio_edit',kwargs={'pk': self.pk})
 
+
+class Competencia(models.Model):
+    ABERTO='AB'
+    FECHADO='FC'
+    COMPETENCIA_STATUS_CHOICES = (
+        ( ABERTO , _('Open')),
+        ( FECHADO, _('Closed')),
+    )
+    condominio = models.ForeignKey(Condominio, on_delete=models.CASCADE)
+    competencia = models.DateField()   # 01/Mes/Ano da Competencia
+    data_fechamento = models.DateField(null=True,blank=True)  # Data do fechamento da Competencia
+    situacao = models.CharField(max_length=2,choices=COMPETENCIA_STATUS_CHOICES,default=ABERTO)
+
+    @property
+    def extenso(self):
+        mes=('Janeiro','Fevereiro','Março','Abril','Maio','Junho',
+        'Julho','Agosto','Setembro','Outubro','Novembro','Dezembro')
+
+        nr_mes=self.competencia.month - 1
+        ano = self.competencia.year
+
+        return "%s de %d." % ( mes[nr_mes] , ano )
+
+    class Meta:
+        get_latest_by = 'competencia'
+
+
+
+    def __str__(self):
+        return str(self.competencia.strftime('%m/%Y'))
+
 class Condomino(models.Model):
     nome_conhecido = models.CharField(max_length=50)
     nome_completo = models.CharField(max_length=150)
-    email = models.EmailField(max_length=254,blank=True)
+    condominio = models.ForeignKey(Condominio, on_delete=models.PROTECT)
+    endereco_unidade = models.CharField(max_length=254,blank=True,null=True)
+    email = models.EmailField(max_length=254,blank=True,null=True   )
     usuario = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
 
     def __str__(self):
@@ -56,20 +75,9 @@ class Condomino(models.Model):
         return reverse('condomino_edit',kwargs={'pk': self.pk})
 
 
-class CondominoDoCondominio(models.Model):
-    condominio = models.ForeignKey(Condominio, on_delete=models.CASCADE)
-    condomino = models.ForeignKey(Condomino, on_delete=models.CASCADE)
-    data_inicio = models.DateField(blank=True)
-
-    def __str__(self):
-        return "%s [%s]" % (self.condomino.nome_conhecido , self.condominio.nome)
-
-    def get_absolute_url(self):
-        return reverse('condomino_do_condominio_edit',kwargs={'pk': self.pk})
-
 
 class Hidrometro(models.Model):
-    condominoDoCondominio = models.ForeignKey(CondominoDoCondominio, on_delete=models.CASCADE)
+    condomino = models.ForeignKey(Condomino,on_delete=models.PROTECT)
     identificacao = models.CharField(max_length=100)
     casasDecimais = models.IntegerField()
 
@@ -80,7 +88,7 @@ class Hidrometro(models.Model):
         return Medicao.objects.filter(hidrometro=self.id).latest('data_medicao')
 
     def __str__(self):
-        return "%s [%s]" % (self.condominoDoCondominio.condomino.nome_conhecido , self.identificacao)
+        return "%s [%s]" % (self.condomino.nome_conhecido , self.identificacao)
 
 
     def get_absolute_url(self):
@@ -92,10 +100,31 @@ class Medicao(models.Model):
     data_medicao = models.DateField()
     cmpt = models.ForeignKey(Competencia, on_delete=models.PROTECT,null=True)
     medicao = models.DecimalField(max_digits=8, decimal_places=3)
+    consumo = models.DecimalField(max_digits=8, decimal_places=3)
 
     def __str__(self):
         return "%s / %s - %s" % (self.hidrometro  , self.data_medicao , self.medicao )
 
+    class Meta:
+        get_latest_by = 'cmpt__competencia'
+
+    def medicao_anterior(self,data,hidrometro):
+        ret = None
+        col = Medicao.objects.filter(hidrometro__id= hidrometro,cmpt__competencia__lt = data)
+        if col:
+            ret = col.latest()
+        return  ret
+
+
+    def save(self, *args, **kwargs):
+        mea=self.medicao_anterior(self.cmpt.competencia,self.hidrometro.id)
+        medicao_ant=0
+        if mea:
+            print("medica  o anterior " , mea.medicao)
+            medicao_ant = (mea.medicao)
+
+        self.consumo = self.medicao - medicao_ant
+        super(Medicao, self).save(*args, **kwargs)
 
     def get_absolute_url(self):
         return reverse('medicao_edit',kwargs={'pk': self.pk})
@@ -126,7 +155,7 @@ class Despesa(models.Model):
         return reverse('despesa_edit',kwargs={'pk': self.pk})
 
 class PagamentoCondomino(models.Model):
-    condominoDoCondominio = models.ForeignKey(CondominoDoCondominio, on_delete=models.SET_NULL, null=True)
+    condomino  = models.ForeignKey(Condomino, on_delete=models.SET_NULL, null=True)
     cmpt = models.ForeignKey(Competencia, on_delete=models.PROTECT, null=True)
     data_pagamento = models.DateField(null=True,blank=True)
     descricao = models.CharField(max_length=200)

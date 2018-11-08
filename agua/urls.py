@@ -1,6 +1,8 @@
-from django.urls import path
+from django.urls import path, register_converter
 
-from . import views
+from . import views, converters
+
+register_converter(converters.MonthYearConverter, 'mmyyyy')
 
 app_name = 'agua'
 urlpatterns = [
@@ -9,5 +11,7 @@ urlpatterns = [
     path('view/<int:pk>', views.agua_view, name="agua_view"),
     path('edit/<int:pk>', views.agua_update, name="agua_edit"),
     path('delete/<int:pk>', views.agua_delete, name="agua_delete"),
+    path('demonstrativo', views.demonstrativo, name="demonstrativo"),
+    path('demonstrativo/<mmyyyy:competencia>/', views.demonstrativo, name="demonstrativo"),
 
 ]
