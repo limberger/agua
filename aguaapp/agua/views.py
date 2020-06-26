@@ -3,22 +3,17 @@
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm, UserCreationForm
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth import update_session_auth_hash, authenticate, login
+from django.contrib.auth import update_session_auth_hash, authenticate
 from django.contrib import messages
 
-from django.http import HttpResponse
-from django.views.generic import ListView, DetailView
-from django.views.generic.edit import CreateView, UpdateView, DeleteView
-from django.urls import reverse_lazy
 from django.forms import ModelForm, DateInput, Textarea, TextInput
 
-from agua.models import Condominio, Condomino, Hidrometro, Medicao, TipoDespesa, Despesa, Competencia
+from aguaapp.agua.models import Condomino, Hidrometro, Medicao, Despesa, Competencia
 from django.utils.translation import ugettext_lazy as _
 
-from social_django.models import UserSocialAuth
+#from social_django.models import UserSocialAuth
 
 import logging
-import json
 
 
 class DateInput(DateInput):
@@ -122,13 +117,14 @@ def home(request, template_name='agua/home.html'):
         # Admin, pode tudo
         condominos = Condomino.objects.all()
     else:
-        if request.user.groups.filter(name='gerente').count():
-            # Gerente - Todos do condominio
-            if condomino:
-                condominos = Condomino.objects.filter(condominio=condomino.condominio)
-        else:
-            # Não é gerente - Pega somente o seu.
-            condominos = Condomino.objects.filter(pk=condomino.id)
+        if condomino:
+            if request.user.groups.filter(name='gerente').count():
+                # Gerente - Todos do condominio
+                if condomino:
+                    condominos = Condomino.objects.filter(condominio=condomino.condominio)
+            else:
+                # Não é gerente - Pega somente o seu.
+                condominos = Condomino.objects.filter(pk=condomino.id)
 
     for condomino in condominos:
         hidrometros = Hidrometro.objects.filter(condomino=condomino.id)

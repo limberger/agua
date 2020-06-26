@@ -18,16 +18,16 @@ from django.urls import path
 from django.conf.urls import url, include
 from django.contrib import admin
 from django.contrib.auth import views as auth_views
-from agua import views as agua_views
+from aguaapp.agua import views as agua_views
 
 urlpatterns = [
     url(r'^$', agua_views.home, name='home'),
     url(r'^login/$', auth_views.LoginView.as_view(template_name="home.html"), name="login"),
     url(r'^logout/$', auth_views.LogoutView.as_view(), name='logout'),
-    url(r'^oauth/', include('social_django.urls', namespace='social')),  # <--
+    # url(r'^oauth/', include('social_django.urls', namespace='social')),  # <--
     url(r'^settings/$', agua_views.settings, name='settings'),
     url(r'^settings/password/$', agua_views.password, name='password'),
     url(r'^signup/$', agua_views.signup, name='signup'),
     path('admin/', admin.site.urls),
-    path('agua/', include('agua.urls')),
+    path('agua/', include('aguaapp.agua.urls')),
 ]

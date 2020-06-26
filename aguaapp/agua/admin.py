@@ -1,5 +1,5 @@
 from django.contrib import admin
-from agua.models import Condominio, Condomino, Hidrometro, Medicao, TipoDespesa, Despesa, Competencia
+from aguaapp.agua.models import Condominio, Condomino, Hidrometro, Medicao, TipoDespesa, Despesa, Competencia
 
 # Register your models here.
 admin.site.register(Condominio)
