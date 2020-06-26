@@ -252,8 +252,8 @@ def agua_list(request, template_name='agua/agua_list.html'):
     data = {}
     #  data['object_list'] = agua
     return render(request, template_name, data)
-#
-#
+
+
 @login_required
 def agua_view(request, pk, template_name='agua/agua_detail.html'):
     pass
@@ -282,8 +282,8 @@ def agua_create(request, template_name='agua/agua_form.html'):
 #         form0.save()
 #         return redirect('/agua/')
 #     return render(request, template_name, {'form': form, 'obs': obs})
-#
-#
+
+
 @login_required
 def agua_update(request, pk, template_name='agua/agua_form.html'):
     pass
