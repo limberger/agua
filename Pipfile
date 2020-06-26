@@ -1,0 +1,27 @@
+[[source]]
+name = "pypi"
+url = "https://pypi.org/simple"
+verify_ssl = true
+
+[dev-packages]
+pytest = "*"
+flake8 = "*"
+pytest-cov = "*"
+pytest-mock = "*"
+codecov = "*"
+model-mommy = "*"
+
+[packages]
+django = "*"
+gunicorn = "*"
+pytest-django = "*"
+python-decouple = "*"
+dj-database-url = "*"
+psycopg2-binary = "*"
+collectfast = "*"
+django-debug-toolbar = "*"
+sentry-sdk = "*"
+ipython = "*"
+
+[requires]
+python_version = "3.8"
