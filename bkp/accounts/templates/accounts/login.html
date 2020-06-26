@@ -7,12 +7,12 @@
 {% block form_heading %}Please Log In{% endblock %}
 
 {% block form %}
-  {% crispy form %}
+{% crispy form %}
 
-  <div class="form-message">
+<div class="form-message">
     <p>
-      Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a>.
+        Don't have an account? <a href="{% url 'accounts:signup' %}">Sign up</a>.
     </p>
-  </div>
+</div>
 {% endblock form %}
 

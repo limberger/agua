@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
         ('agua', '0002_auto_20181107_2141'),
     ]
@@ -28,8 +27,10 @@ class Migration(migrations.Migration):
                 ('data_pagamento', models.DateField()),
                 ('descricao', models.CharField(max_length=200)),
                 ('valor', models.DecimalField(decimal_places=2, max_digits=18)),
-                ('cmpt', models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='agua.Competencia')),
-                ('condominoDoCondominio', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL, to='agua.CondominoDoCondominio')),
+                ('cmpt',
+                 models.ForeignKey(null=True, on_delete=django.db.models.deletion.PROTECT, to='agua.Competencia')),
+                ('condominoDoCondominio', models.ForeignKey(null=True, on_delete=django.db.models.deletion.SET_NULL,
+                                                            to='agua.CondominoDoCondominio')),
             ],
         ),
         migrations.AddField(

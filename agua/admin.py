@@ -9,7 +9,8 @@ admin.site.register(TipoDespesa)
 admin.site.register(Despesa)
 admin.site.register(Competencia)
 
+
 @admin.register(Medicao)
 class MedicaoAdmin(admin.ModelAdmin):
-     ordering = ['-cmpt','hidrometro','medicao']
-     list_display = ['cmpt','hidrometro','medicao' , 'consumo']
+    ordering = ['-cmpt', 'hidrometro', 'medicao']
+    list_display = ['cmpt', 'hidrometro', 'medicao', 'consumo']

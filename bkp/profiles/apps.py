@@ -7,4 +7,4 @@ class ProfileConfig(AppConfig):
     verbose_name = 'User Profiles'
 
     def ready(self):
-        from . import signals   # noqa
+        from . import signals  # noqa

@@ -89,3 +89,6 @@ local_settings.py
 db.sqlite3
 base.dump
 servidor.sh
+
+.venv
+.idea

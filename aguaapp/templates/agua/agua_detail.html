@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
-{% block menu %}<li><a href="admin">Admin</a></li>{% endblock %}
+{% block menu %}
+<li><a href="admin">Admin</a></li>{% endblock %}
 
 {% block content %}
 <h1>Detalhes</h1>
@@ -7,9 +8,9 @@
 Nome completo: {{object.nome_completo}}<br/>
 Telefone: {{ object.telefone }}<br/>
 {% if object.vira_para_o_encontro %}
-   Virá para o encontro<br/>
+Virá para o encontro<br/>
 {% else %}
-  Não Virá para o encontro<br/>
+Não Virá para o encontro<br/>
 {% endif %}
 Parentesco: {{ object.parentesco}}<br/>
 Email: {{ object.email }} <br/>

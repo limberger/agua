@@ -14,7 +14,6 @@ import os
 import django_heroku
 import dj_database_url
 
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Static files (CSS, JavaScript, Images)
@@ -38,11 +37,10 @@ SECRET_KEY = os.environ.get('SECRET_KEY')
 DEBUG = os.environ.get('DEBUG', True)
 
 DATABASES = {}
-DATABASES['default'] = dj_database_url.parse(os.environ.get('DATABASE_URL','postgres://usuario:senha@localhost/aguaapp'),conn_max_age=600, ssl_require=True)
-
+DATABASES['default'] = dj_database_url.parse(
+    os.environ.get('DATABASE_URL', 'postgres://usuario:senha@localhost/aguaapp'), conn_max_age=600, ssl_require=True)
 
 ALLOWED_HOSTS = ALLOWED_HOSTS = ['*']
-
 
 # Application definition
 
@@ -53,7 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-     'social_django',  # <--
+    'social_django',  # <--
     'agua',
 ]
 
@@ -88,14 +86,13 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
 
                 'social_django.context_processors.backends',  # <--
-                'social_django.context_processors.login_redirect', # <--
+                'social_django.context_processors.login_redirect',  # <--
             ],
         },
     },
 ]
 
 WSGI_APPLICATION = 'aguaapp.wsgi.application'
-
 
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
@@ -131,7 +128,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/2.1/topics/i18n/
 
@@ -144,7 +140,6 @@ USE_I18N = True
 USE_L10N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.1/howto/static-files/

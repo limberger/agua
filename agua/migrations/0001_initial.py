@@ -5,7 +5,6 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
     dependencies = [
@@ -54,7 +53,8 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('identificacao', models.CharField(max_length=100)),
                 ('casasDecimais', models.IntegerField()),
-                ('condominoDoCondominio', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='agua.CondominoDoCondominio')),
+                ('condominoDoCondominio',
+                 models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='agua.CondominoDoCondominio')),
             ],
         ),
         migrations.CreateModel(
