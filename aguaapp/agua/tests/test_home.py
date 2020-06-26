@@ -9,10 +9,12 @@ def resp(client):
     resp = client.get(reverse('home'))
     return resp
 
+
 @pytest.fixture
 def resp_logado(client_com_usuario_logado):
     resp_logado = client_com_usuario_logado.get(reverse('home'))
     return resp_logado
+
 
 def test_status_code(resp):
     assert resp.status_code == 302

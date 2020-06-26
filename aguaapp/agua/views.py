@@ -2,7 +2,7 @@
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm, UserCreationForm
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, redirect
 from django.contrib.auth import update_session_auth_hash, authenticate
 from django.contrib import messages
 
@@ -11,9 +11,7 @@ from django.forms import ModelForm, DateInput, Textarea, TextInput
 from aguaapp.agua.models import Condomino, Hidrometro, Medicao, Despesa, Competencia
 from django.utils.translation import ugettext_lazy as _
 
-#from social_django.models import UserSocialAuth
-
-import logging
+from social_django.models import UserSocialAuth
 
 
 class DateInput(DateInput):
@@ -137,7 +135,7 @@ def home(request, template_name='agua/home.html'):
 def demonstrativo(request, competencia=None, template_name='agua/demonstrativo.html'):
     condominio = 1
     cpt = None
-    if competencia != None:
+    if competencia is not None:
         comp = str(competencia).zfill(6)
         ano = int(comp[-4:])
         mes = int(comp[:2])
@@ -145,7 +143,7 @@ def demonstrativo(request, competencia=None, template_name='agua/demonstrativo.h
                                          competencia__year=ano,
                                          competencia__month=mes)[0]
 
-    if cpt == None:
+    if cpt is None:
         cpt = Competencia.objects.latest()
 
     despesas = Despesa.objects.filter(condominio__id=condominio, cmpt__id=cpt.id)
@@ -179,6 +177,7 @@ def signup(request):
             username = form.cleaned_data.get('username')
             raw_password = form.cleaned_data.get('password')
             user = authenticate(username=username, password=raw_password)
+            print(user)
             # login(request, user,backend='django.contrib.auth.backends.ModelBackend)
             return redirect('home')
     else:
@@ -236,66 +235,66 @@ def password(request):
     return render(request, 'agua/password.html', {'form': form})
 
 
-@login_required
-def agua_list(request, template_name='agua/agua_list.html'):
-    logger = logging.getLogger('testlogger')
-    logger.info('agua_list')
-    responsavel = Agua.objects.filter(usuario_responsavel=request.user.id,
-                                      parentesco='Responsável')
-    if not responsavel:
-        form = AguaForm(request.POST or None)
-        request.session['parentesco'] = 'Responsável'
-        request.session['obs'] = 'Cadastre inicialmente o responsável pela família (o usuário que se cadastrou).'
-        return redirect('/agua/new')
-
-    agua = Agua.objects.filter(usuario_responsavel=request.user.id)
-    data = {}
-    data['object_list'] = agua
-    return render(request, template_name, data)
-
-
-@login_required
-def agua_view(request, pk, template_name='agua/agua_detail.html'):
-    agua = get_object_or_404(Agua, pk=pk)
-    return render(request, template_name, {'object': agua})
-
-
-@login_required
-def agua_create(request, template_name='agua/agua_form.html'):
-    logger = logging.getLogger('testlogger')
-    logger.info('agua_create')
-    form = AguaForm(request.POST or None)
-    obs = ''
-    if request.session['obs']:
-        obs = request.session['obs']
-        request.session['obs'] = None
-    if request.session['parentesco']:
-        logger.info('setting parentesco')
-        logger.info(request.session['parentesco'])
-        form = AguaForm(initial={'parentesco': request.session['parentesco']})
-        request.session['parentesco'] = None
-    if form.is_valid():
-        form0 = form.save(commit=False)
-        form0.usuario_responsavel = request.user
-        form0.save()
-        return redirect('/agua/')
-    return render(request, template_name, {'form': form, 'obs': obs})
+# @login_required
+# def agua_list(request, template_name='agua/agua_list.html'):
+#     logger = logging.getLogger('testlogger')
+#     logger.info('agua_list')
+#     responsavel = Agua.objects.filter(usuario_responsavel=request.user.id,
+#                                       parentesco='Responsável')
+#     if not responsavel:
+#         form = AguaForm(request.POST or None)
+#         request.session['parentesco'] = 'Responsável'
+#         request.session['obs'] = 'Cadastre inicialmente o responsável pela família (o usuário que se cadastrou).'
+#         return redirect('/agua/new')
+#
+#     agua = Agua.objects.filter(usuario_responsavel=request.user.id)
+#     data = {}
+#     data['object_list'] = agua
+#     return render(request, template_name, data)
+#
+#
+# @login_required
+# def agua_view(request, pk, template_name='agua/agua_detail.html'):
+#     agua = get_object_or_404(Agua, pk=pk)
+#     return render(request, template_name, {'object': agua})
 
 
-@login_required
-def agua_update(request, pk, template_name='agua/agua_form.html'):
-    agua = get_object_or_404(Agua, pk=pk)
-    form = AguaForm(request.POST or None, instance=agua)
-    if form.is_valid():
-        form.save()
-        return redirect('/agua/')
-    return render(request, template_name, {'form': form})
+# @login_required
+# def agua_create(request, template_name='agua/agua_form.html'):
+#     logger = logging.getLogger('testlogger')
+#     logger.info('agua_create')
+#     form = AguaForm(request.POST or None)
+#     obs = ''
+#     if request.session['obs']:
+#         obs = request.session['obs']
+#         request.session['obs'] = None
+#     if request.session['parentesco']:
+#         logger.info('setting parentesco')
+#         logger.info(request.session['parentesco'])
+#         form = AguaForm(initial={'parentesco': request.session['parentesco']})
+#         request.session['parentesco'] = None
+#     if form.is_valid():
+#         form0 = form.save(commit=False)
+#         form0.usuario_responsavel = request.user
+#         form0.save()
+#         return redirect('/agua/')
+#     return render(request, template_name, {'form': form, 'obs': obs})
+#
+#
+# @login_required
+# def agua_update(request, pk, template_name='agua/agua_form.html'):
+#     agua = get_object_or_404(Agua, pk=pk)
+#     form = AguaForm(request.POST or None, instance=agua)
+#     if form.is_valid():
+#         form.save()
+#         return redirect('/agua/')
+#     return render(request, template_name, {'form': form})
 
 
-@login_required
-def agua_delete(request, pk, template_name='agua/agua_confirm_delete.html'):
-    agua = get_object_or_404(Agua, pk=pk)
-    if request.method == 'POST':
-        agua.delete()
-        return redirect('/agua/')
-    return render(request, template_name, {'object': agua})
+# @login_required
+# def agua_delete(request, pk, template_name='agua/agua_confirm_delete.html'):
+#     agua = get_object_or_404(Agua, pk=pk)
+#     if request.method == 'POST':
+#         agua.delete()
+#         return redirect('/agua/')
+#     return render(request, template_name, {'object': agua})
