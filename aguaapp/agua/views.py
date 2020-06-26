@@ -1,4 +1,5 @@
 # Create your views here.
+import logging
 
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.forms import AdminPasswordChangeForm, PasswordChangeForm, UserCreationForm
@@ -235,22 +236,22 @@ def password(request):
     return render(request, 'agua/password.html', {'form': form})
 
 
-# @login_required
-# def agua_list(request, template_name='agua/agua_list.html'):
-#     logger = logging.getLogger('testlogger')
-#     logger.info('agua_list')
-#     responsavel = Agua.objects.filter(usuario_responsavel=request.user.id,
-#                                       parentesco='Responsável')
-#     if not responsavel:
-#         form = AguaForm(request.POST or None)
-#         request.session['parentesco'] = 'Responsável'
-#         request.session['obs'] = 'Cadastre inicialmente o responsável pela família (o usuário que se cadastrou).'
-#         return redirect('/agua/new')
-#
-#     agua = Agua.objects.filter(usuario_responsavel=request.user.id)
-#     data = {}
-#     data['object_list'] = agua
-#     return render(request, template_name, data)
+@login_required
+def agua_list(request, template_name='agua/agua_list.html'):
+    logger = logging.getLogger('testlogger')
+    logger.info('agua_list')
+    # responsavel = Agua.objects.filter(usuario_responsavel=request.user.id,
+    #                                  parentesco='Responsável')
+    # if not responsavel:
+    #    # form = AguaForm(request.POST or None)
+    #    request.session['parentesco'] = 'Responsável'
+    #    request.session['obs'] = 'Cadastre inicialmente o responsável pela família (o usuário que se cadastrou).'
+    #    return redirect('/agua/new')
+
+    # agua = Agua.objects.filter(usuario_responsavel=request.user.id)
+    data = {}
+    #  data['object_list'] = agua
+    return render(request, template_name, data)
 #
 #
 # @login_required
