@@ -3,15 +3,15 @@
 {% if user.is_authenticated %}
 <h2>Links - {{ user.username }}</h2>
 <ul>
-  <li><a href="core">Cadastro</a></li>
-  <li><a href="admin">Admin</a></li>
+    <li><a href="core">Cadastro</a></li>
+    <li><a href="admin">Admin</a></li>
 </ul>
 {% else %}
 <h2>Login</h2>
 <form method="post">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Login</button>
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Login</button>
 </form>
 <br>
 <!-- <p><strong>-- OU --</strong></p>

@@ -2,64 +2,64 @@
 
 
 {% block content %}
-  <h1>Demonstrativo</h1>
-  <h2>Usuario Responsável - {{ user.username }}</h2>
-  <h2>{{ competencia.extenso }}</h2>
+<h1>Demonstrativo</h1>
+<h2>Usuario Responsável - {{ user.username }}</h2>
+<h2>{{ competencia.extenso }}</h2>
 
-  <table border="1">
+<table border="1">
     <thead>
-      <tr>
+    <tr>
         <th>Tipo despesa</th>
         <th>Descrição</th>
         <th>Data</th>
         <th>Valor</th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-      {% for despesa in despesas %}
-      <tr>
+    {% for despesa in despesas %}
+    <tr>
         <td>{{ despesa.tipo_despesa.descricao }}</td>
         <td>{{ despesa.descricao }}</td>
         <td>{{ despesa.data_despesa|date:"d.m.Y" }}</td>
         <td>{{ despesa.valor }}</td>
-     </tr>
-     {% endfor %}
+    </tr>
+    {% endfor %}
     </tbody>
-  </table>
-  <h2>Total  R$ {{ valor_total_despesa }}</h2>
-  <table border="1">
+</table>
+<h2>Total R$ {{ valor_total_despesa }}</h2>
+<table border="1">
     <thead>
-      <tr>
+    <tr>
         <th>Nome</th>
         <th>Identificao Hidrömetro</th>
         <th>Consumo</th>
         <th>Percentual</th>
         <th>Valor</th>
-      </tr>
+    </tr>
     </thead>
     <tbody>
-<!--
-      hidrometro = models.ForeignKey(Hidrometro, on_delete=models.CASCADE)
-      data_medicao = models.DateField()
-      cmpt = models.ForeignKey(Competencia, on_delete=models.PROTECT,null=True)
-      medicao = models.DecimalField(max_digits=8, decimal_places=3)
-      consumo = models.DecimalField(max_digits=8, decimal_places=3)
--->
-      {% for consumo in consumos %}
-      <tr>
+    <!--
+          hidrometro = models.ForeignKey(Hidrometro, on_delete=models.CASCADE)
+          data_medicao = models.DateField()
+          cmpt = models.ForeignKey(Competencia, on_delete=models.PROTECT,null=True)
+          medicao = models.DecimalField(max_digits=8, decimal_places=3)
+          consumo = models.DecimalField(max_digits=8, decimal_places=3)
+    -->
+    {% for consumo in consumos %}
+    <tr>
         <td>{{ consumo.0.hidrometro.condomino.nome_conhecido }}</td>
         <td>{{ consumo.0.hidrometro.identificacao }}</td>
         <td>{{ consumo.0.consumo }}</td>
-        <td>{{ consumo.1|floatformat:2  }}</td>
-        <td>{{ consumo.2|floatformat:2  }}</td>
-     </tr>
-     {% endfor %}
+        <td>{{ consumo.1|floatformat:2 }}</td>
+        <td>{{ consumo.2|floatformat:2 }}</td>
+    </tr>
+    {% endfor %}
     </tbody>
-  </table>
-  <h2>Total Consumo {{ total_consumo }}</h2>
-  <ul>
+</table>
+<h2>Total Consumo {{ total_consumo }}</h2>
+<ul>
     <li><a href="{% url 'agua:demonstrativo'  %}">Demonstrativo</a></li>
-  </ul>
-  <br/>
-  <br/>
+</ul>
+<br/>
+<br/>
 {% endblock %}

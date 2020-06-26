@@ -1,0 +1,15 @@
+version: "3.3"
+
+services:
+  database:
+    container_name: psique_database
+    image: postgres
+    restart: always
+    volumes:
+      - ./.pgdata:/var/lib/postgresql/data
+    environment:
+      - LC_ALL=C.UTF-8
+      - POSTGRES_PASSWORD=psiqueorg
+      - POSTGRES_USER=psiqueorg
+    ports:
+      - 5431:5432
