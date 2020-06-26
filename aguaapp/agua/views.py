@@ -254,14 +254,16 @@ def agua_list(request, template_name='agua/agua_list.html'):
     return render(request, template_name, data)
 #
 #
-# @login_required
-# def agua_view(request, pk, template_name='agua/agua_detail.html'):
+@login_required
+def agua_view(request, pk, template_name='agua/agua_detail.html'):
+    pass
 #     agua = get_object_or_404(Agua, pk=pk)
 #     return render(request, template_name, {'object': agua})
 
 
-# @login_required
-# def agua_create(request, template_name='agua/agua_form.html'):
+@login_required
+def agua_create(request, template_name='agua/agua_form.html'):
+    pass
 #     logger = logging.getLogger('testlogger')
 #     logger.info('agua_create')
 #     form = AguaForm(request.POST or None)
@@ -282,8 +284,9 @@ def agua_list(request, template_name='agua/agua_list.html'):
 #     return render(request, template_name, {'form': form, 'obs': obs})
 #
 #
-# @login_required
-# def agua_update(request, pk, template_name='agua/agua_form.html'):
+@login_required
+def agua_update(request, pk, template_name='agua/agua_form.html'):
+    pass
 #     agua = get_object_or_404(Agua, pk=pk)
 #     form = AguaForm(request.POST or None, instance=agua)
 #     if form.is_valid():
@@ -292,8 +295,9 @@ def agua_list(request, template_name='agua/agua_list.html'):
 #     return render(request, template_name, {'form': form})
 
 
-# @login_required
-# def agua_delete(request, pk, template_name='agua/agua_confirm_delete.html'):
+@login_required
+def agua_delete(request, pk, template_name='agua/agua_confirm_delete.html'):
+    pass
 #     agua = get_object_or_404(Agua, pk=pk)
 #     if request.method == 'POST':
 #         agua.delete()
