@@ -406,11 +406,8 @@
             "version": "==4.0.0"
         },
         "social-auth-core": {
-            "hashes": [
-                "sha256:567b1f1bb1912e2c3153df888b48ba883dabdfe72f031e8cae4d404f61745c21",
-                "sha256:694eb355825cd72d3346afb816dd899493be1a8ee7405945d2e989cabed10cf2"
-            ],
-            "version": "==4.0.3"
+            "hashes": [],
+            "version": "==4.5.0"
         },
         "sqlparse": {
             "hashes": [
