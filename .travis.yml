@@ -2,7 +2,8 @@ language: python
 python:
   - "3.4"
 install:
-  - pip install -r requirements.txt
+  - pip install pipenv
+  - pipenv install
   - cd ..
   - django-admin.py startproject --template=./edge --extension=py,md,html,env my_proj
   - cd my_proj/src
