@@ -7,7 +7,7 @@ urllib3>=1.24.2
 gunicorn==20.0.4
 django-heroku==0.3.1
 whitenoise>=5
-certifi==2018.10.15
+certifi==2024.7.4
 chardet==3.0.4
 defusedxml==0.5.0
 dj-database-url==0.5.0
