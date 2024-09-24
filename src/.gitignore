@@ -87,3 +87,5 @@ local_settings.py
 
 .env
 db.sqlite3
+base.dump
+servidor.sh

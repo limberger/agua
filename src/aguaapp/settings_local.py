@@ -1,4 +1,8 @@
+print(1)
 try:
-    from agua.settings import *
+    print(2)
+    from aguaapp.settings import *
+    print(3)
 except ImportError as e:
     pass
+print(4)

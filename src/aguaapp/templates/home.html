@@ -1,7 +1,5 @@
 {% extends 'base.html' %}
-
 {% block content %}
-
 {% if user.is_authenticated %}
 <h2>Links - {{ user.username }}</h2>
 <ul>
@@ -21,7 +19,5 @@
 <br/> -->
 <p><strong>-- OU --</strong></p>
 <a href="{% url 'signup' %}">Cadastrar um usuário</a>
-
-
 {% endif %}
 {% endblock %}

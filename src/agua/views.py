@@ -13,12 +13,13 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.urls import reverse_lazy
 from django.forms import ModelForm, DateInput, Textarea , TextInput
 
-from agua.models import Condominio, Condomino, CondominoDoCondominio, Hidrometro, Medicao, TipoDespesa, Despesa
+from agua.models import Condominio, Condomino, Hidrometro, Medicao, TipoDespesa, Despesa,Competencia
 from django.utils.translation import ugettext_lazy as _
 
 from social_django.models import UserSocialAuth
 
 import logging
+import json
 
 class DateInput(DateInput):
     input_type = 'date'
@@ -32,10 +33,10 @@ class EmailInput(TextInput):
 
 class MedicaoForm(ModelForm):
     class Meta:
-        model = Medicaos
+        model = Medicao
         fields = ['hidrometro' ,
                   'data_medicao' ,
-                  'competencia' ,
+                  'cmpt' ,
                   'medicao' ]
         help_texts = {
             'nome_conhecido': _('Informe o nome ou apelido pelo qual é conhecido'),
@@ -106,8 +107,96 @@ class MedicaoForm(ModelForm):
     #         obj.usuario_responsaavel = self.request.user
     #     obj.save()
 @login_required
-def home(request):
-    return render(request, 'agua/home.html')
+def home(request,template_name='agua/home.html'):
+
+    try:
+        condomino = Condomino.objects.get(usuario=request.user.id)
+    except Condomino.DoesNotExist:
+        condomino = None
+
+    listaHidrometros=[]
+    condominos = []
+
+    if request.user.is_superuser:
+        # Admin, pode tudo
+        condominos  = Condomino.objects.all()
+    else:
+        if request.user.groups.filter(name='gerente').count():
+            # Gerente - Todos do condominio
+            if condomino:
+                condominos = Condomino.objects.filter(condominio=condomino.condominio.id)
+        else:
+            # Não é gerente - Pega somente o seu.
+            condominos = Condomino.objects.filter(pk=condomino.id)
+
+
+
+    for condomino in condominos:
+        hidrometros = Hidrometro.objects.filter(condomino=condomino.id)
+        listaHidrometros.append([condomino,hidrometros])
+
+    return render(request, template_name , {'listaHidrometros':listaHidrometros, 'condomino': condomino})
+
+@login_required
+def demonstrativo(request, competencia=None , template_name='agua/demonstrativo.html'):
+
+    condominio = 1
+    cpt = None
+    if competencia != None:
+        comp=str(competencia).zfill(6)
+        ano = int(comp[-4:])
+        mes = int(comp[:2])
+        cpt = Competencia.objects.filter(condominio__id = 1 ,
+                                         competencia__year = ano ,
+                                         competencia__month = mes)[0]
+
+    if cpt == None:
+        cpt = Competencia.objects.latest()
+
+
+    despesas = Despesa.objects.filter(condominio__id=condominio , cmpt__id=cpt.id)
+    valor_total_despesa = 0
+    for despesa in despesas:
+        valor_total_despesa += despesa.valor
+
+    consumos = Medicao.objects.filter(hidrometro__condomino__condominio__id=condominio , cmpt__id=cpt.id).order_by("hidrometro__condomino__nome_conhecido","hidrometro__identificacao")
+    total_consumo = 0
+    consumos_data = []
+    for consumo in consumos:
+        total_consumo += consumo.consumo
+        consumos_data.append([consumo,0,0])
+
+    consumo_por_condomino = {}
+    for consumo in consumos_data:
+        consumo[1] =  (  consumo[0].consumo / total_consumo * 100 )
+        consumo[2] = consumo[1] / 100 * valor_total_despesa
+        nome = consumo[0].hidrometro.condomino.nome_conhecido
+        if not nome in consumo_por_condomino:
+            consumo_por_condomino[nome] = [nome , consumo[0].consumo , consumo[1] , consumo[2] ]
+        else:
+            consumo_por_condomino[nome][1] += consumo[0].consumo
+            consumo_por_condomino[nome][2] += consumo[1]
+            consumo_por_condomino[nome][3] += consumo[2]
+
+    competencias = Competencia.objects.filter(condominio__id=condominio).order_by('-competencia')
+
+    return render(request,template_name,{   'competencia':cpt,
+                                            'despesas':despesas ,
+                                            'valor_total_despesa': valor_total_despesa ,
+                                            'consumos':consumos_data ,
+                                            'total_consumo': total_consumo ,
+                                            'competencias': competencias ,
+                                            'consumo_por_condomino': consumo_por_condomino.values()})
+
+@login_required
+def consumo(request, hidrometro , template_name='agua/consumo.html'):
+    hidrometro = get_object_or_404(Hidrometro, pk=pk)
+    competencias = Competencia.objects.filter(situacao=Competencia.ABERTO)
+    form = MedicaoForm(request.POST or None, instance=hidrometro)
+    if form.is_valid():
+        form.save()
+        return redirect('/agua/')
+    return render(request, template_name, {'form':form})
 
 def signup(request):
     if request.method == 'POST':

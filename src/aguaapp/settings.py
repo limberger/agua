@@ -26,25 +26,24 @@ STATICFILES_DIRS = [
 ]
 STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
 
+MANAGER_GROUP_NAME = 'gerente'
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get('SECRET_KEY')
-
+print('-*-')
+print(SECRET_KEY)
+print('-*-')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.environ.get('DEBUG', True)
 
-#DATABASES = {
-#    'default': os.environ.get('DATABASE_URL','postgres://usuario@localhost/limberger')
-#}
 DATABASES = {}
-DATABASES['default'] = dj_database_url.parse(os.environ.get('DATABASE_URL','postgres://usuario:senha@localhost/limberger'),conn_max_age=600, ssl_require=True)
+DATABASES['default'] = dj_database_url.parse(os.environ.get('DATABASE_URL','postgres://usuario:senha@localhost/aguaapp'),conn_max_age=600, ssl_require=True)
 
 
-ALLOWED_HOSTS = ALLOWED_HOSTS = ['*'] #['0.0.0.0', 'localhost', 'limberger.herokuapp.com']
-
-#['*']
+ALLOWED_HOSTS = ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -155,6 +154,7 @@ USE_TZ = True
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
 LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'home'
 
 SOCIAL_AUTH_FACEBOOK_KEY = os.environ.get('SOCIAL_AUTH_FACEBOOK_KEY')
 SOCIAL_AUTH_FACEBOOK_SECRET = os.environ.get('SOCIAL_AUTH_FACEBOOK_SECRET')
